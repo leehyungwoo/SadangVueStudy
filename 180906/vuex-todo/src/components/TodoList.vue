@@ -4,7 +4,7 @@
       <li v-for="(todoItem, index) in todoItems" :key="todoItem" class="shadow">
         <i class="checkBtn fas fa-check" aria-hidden="true"></i>
         {{ todoItem }}
-        <span class="removeBtn" type="button" @click="removeTodo(todoItem, index)">
+        <span class="removeBtn" type="button" @click="removeTodo({todoItem, index})">
           <i class="far fa-trash-alt" aria-hidden="true"></i>
         </span>
       </li>
@@ -13,17 +13,17 @@
 </template>
 
 <script>
+import { mapState, mapActions, mapGetters } from "vuex";
+
 export default {
-  computed: {
-    todoItems() {
-      return this.$store.state.todoItems;
-    }
+  created() {
+    this.todos;
   },
-  methods: {
-    removeTodo(todoItem, index) {
-      this.$store.dispatch("removeTodo", { todoItem, index });
-    }
-  }
+  computed: {
+    ...mapGetters(["todos"]),
+    ...mapState(["todoItems"])
+  },
+  methods: mapActions(["removeTodo"])
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="inputBox shadow">
-    <input type="text" v-model="newTodoItem" placeholder="Type what you have to do" v-on:keyup.enter="addTodo">
-    <span class="addContainer" v-on:click="addTodo">
+    <input type="text" v-model="newTodoItem" placeholder="Type what you have to do" v-on:keyup.enter="addEvent()">
+    <span class="addContainer" v-on:click="addEvent(newTodoItem)">
       <i class="addBtn fas fa-plus" aria-hidden="true"></i>
     </span>
 
@@ -15,28 +15,34 @@
 </template>
 
 <script>
-import Modal from './common/Modal.vue'
+import Modal from "./common/Modal.vue";
+import _ from "lodash";
+import { mapActions } from "vuex";
 
 export default {
   data() {
     return {
-      newTodoItem: '',
+      newTodoItem: "",
       showModal: false
-    }
+    };
   },
-  methods: {
-    addTodo() {
-     this.$store.dispatch('addTodo',this.newTodoItem)
-     this.clearInput()
+  methods: _.extend(
+    {
+      addEvent() {
+        if (this.newTodoItem.trim() === "") {
+          this.showModal = true;
+        } else {
+          this.addTodo(this.newTodoItem);
+          this.newTodoItem = "";
+        }
+      }
     },
-    clearInput() {
-      this.newTodoItem = '';
-    }
-  },
+    mapActions(["addTodo"])
+  ),
   components: {
     Modal: Modal
   }
-}
+};
 </script>
 
 <style scoped>
@@ -55,7 +61,7 @@ input:focus {
 }
 .addContainer {
   float: right;
-  background: linear-gradient(to right, #6478FB, #8763FB);
+  background: linear-gradient(to right, #6478fb, #8763fb);
   display: inline-block;
   width: 3rem;
   border-radius: 0 5px 5px 0;
